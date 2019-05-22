@@ -1,7 +1,7 @@
 <template>
-  <div class="movie-container">
+  <div class="essay-container">
     <img class="img" :src="data.image" alt="">
-    <img class="tags" src="./images/movie@tag.png" alt="">
+    <img class="tags" src="./images/essay@tag.png" alt="">
     <div class="content">{{data.content}}</div>
   </div>
 </template>

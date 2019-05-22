@@ -40,20 +40,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/style/mixin.scss';
 .like-container {
   display: inline-flex;
   flex-direction: row;
-  padding: 0.2rem;
+  padding: pa2rem(5) 0;
   .img {
-    width: 0.64rem;
-    height: 0.64rem;
+    width: px2rem(16);
+    height: px2rem(16);
   }
   .count {
-    font-size: 0.48rem;
+    font-size: px2rem(12);
     color: #cccccc;
     position: relative;
-    bottom: .2rem;
-    left: 0.12rem;
+    bottom: px2rem(5);
+    left: px2rem(3);
   }
 }
 </style>

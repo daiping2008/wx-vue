@@ -30,42 +30,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../assets/style/mixin.scss';
 .episode-container {
   display: inline-flex;
   flex-direction: row;
-  height: .12rem;
+  height: px2rem(30);
   .index-container{
     display: flex;
     flex-direction: row;
     align-items: baseline;
     .plain {
-      font-size: .64rem;
+      font-size: px2rem(16);
     }
     .index {
-      font-size: 1.2rem;
-      line-height: 1.2rem;
+      font-size: px2rem(30);
+      line-height: px2rem(30);
       font-weight: bold;
     }
     .line {
-      height: .90rem;
+      height: px2rem(23);
       border: 1px solid #000;
-      margin-left: .28rem;
-      margin-right: .28rem
+      margin-left: px2rem(7);
+      margin-right: px2rem(7);
     }
   }
   .date-container{
     display: flex;
     flex-direction: column;
     .month {
-      font-size: .48rem;
-      line-height: .48rem;
-      margin-right: .08rem;
-      margin-bottom: .06rem;
-      padding-top: 0.1rem;
+      font-size: px2rem(12);
+      line-height: px2rem(12);
+      margin-right: px2rem(2);
+      margin-bottom: px2rem(3);
+      padding-top: px2rem(2.5);
     }
     .year {
-      font-size: .4rem;
-      line-height: .4rem;
+      font-size: px2rem(10);
+      line-height: px2rem(10);
     }
   }
 }
