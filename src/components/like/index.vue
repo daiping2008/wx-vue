@@ -44,7 +44,7 @@ export default {
 .like-container {
   display: inline-flex;
   flex-direction: row;
-  padding: pa2rem(5) 0;
+  padding: px2rem(5) 0;
   .img {
     width: px2rem(16);
     height: px2rem(16);
