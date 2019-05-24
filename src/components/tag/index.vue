@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-wrapper">
+  <div @click="onTapping" class="tag-wrapper">
     <span>{{data}}</span>
     <slot name='extra'></slot>
   </div>
@@ -10,6 +10,11 @@ export default {
   props: {
     data: {
       type: String
+    }
+  },
+  methods: {
+    onTapping () {
+      this.$emit('onTapping', { value: this.data })
     }
   }
 }

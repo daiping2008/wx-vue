@@ -45,14 +45,43 @@
         </div>
       </div>
     </div>
+
+    <!--评论-->
+    <div v-show='!posting' class="post-container">
+      <div @click="onFakePost" class="post-fake">
+        <div>输入短评</div>
+      </div>
+      <div class="right-side">
+        <v-like @onLike='onLike' :like='like' :likeCount='likeCount'></v-like>
+      </div>
+    </div>
+    <div v-show="posting" class="posting-container">
+      <div class="posting-header">
+        <div>仅可点击标签+1</div>
+        <div @click="cancel" class="cancel">取消</div>
+      </div>
+      <div class="comment-container">
+        <v-tag @onTapping='onPost' class="tag" v-for="v in filterComments" :key='v.content' :data='v.content'>
+          <span slot='extra'>+{{v.nums}}</span>
+        </v-tag>
+      </div>
+      <input @keyup.enter="onPost" v-model="q" class="post" maxlength="12" placeholder="短评最多12个字" type="text">
+    </div>
+    <v-mask v-show="posting"></v-mask>
+    <!--评论-->
   </div>
 </template>
 
 <script>
 import '@/utils/directive'
+import VLike from '@/components/like'
 import VTag from '@/components/tag'
+import VMask from '@/components/mask'
+
 import BookModel from '@/models/book'
+import LikeModel from '@/models/like'
 const bookModel = new BookModel()
+const likeModel = new LikeModel()
 export default {
   props: {
     bid: {
@@ -64,7 +93,14 @@ export default {
       book: {},
       comments: [],
       like: false,
-      likeCount: 0
+      likeCount: 0,
+      posting: false,
+      q: ''
+    }
+  },
+  computed: {
+    filterComments () {
+      return this.comments.slice(0, 3)
     }
   },
   mounted () {
@@ -87,10 +123,52 @@ export default {
           this.like = !!res.like_status
           this.likeCount = res.fav_nums
         })
+    },
+    onLike ({ like, likeCount }) {
+      const behavior = !like ? 'like' : 'cancel'
+      likeModel.like({
+        behavior,
+        id: this.book.id,
+        category: 400
+      }).then(res => {
+        this.like = !like
+        this.likeCount = like ? likeCount - 1 : likeCount + 1
+      })
+    },
+    onFakePost () {
+      this.posting = true
+    },
+    cancel () {
+      this.posting = false
+    },
+    onPost ({ value }) {
+      const comment = value || this.q
+      if (!comment) return
+
+      if (comment.length > 12) return
+
+      bookModel.addShortComment({
+        id: this.book.id,
+        content: comment
+      }).then(res => {
+        this.comments.unshift({
+          nums: 1,
+          content: comment
+        })
+        this.hidePosting()
+      }).catch(er => {
+        this.hidePosting()
+      })
+    },
+    hidePosting () {
+      this.q = ''
+      this.posting = false
     }
   },
   components: {
-    VTag
+    VTag,
+    VLike,
+    VMask
   }
 }
 </script>
@@ -99,6 +177,7 @@ export default {
 @import '../../assets/style/mixin.scss';
 .book-detail-container {
   @include column();
+  padding-bottom: px2rem(60);
   background-color: #f5f5f5;
   .header {
     @include column();
@@ -172,6 +251,77 @@ export default {
           text-align: right;
         }
       }
+    }
+  }
+  .post-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+    height: px2rem(50);
+    @include row();
+    @include center();
+    justify-content: space-between;
+    padding: 0 px2rem(15);
+    box-shadow: 1px -1px 1px #e3e3e3;
+    z-index: 3;
+    .post-fake {
+      font-size: px2rem(14);
+      color: #999;
+      width: px2rem(230);
+      height: px2rem(30);
+      line-height: px2rem(30);
+      text-align: center;
+      border: 1px solid #999;
+      border-radius: px2rem(7.5);
+    }
+    .right-side {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .posting-container {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 1px -1px 1px #e3e3e3;
+    padding: 0 px2rem(10);
+    box-sizing: border-box;
+    z-index: 10;
+    .posting-header {
+      width: 100%;
+      @include row();
+      justify-content: space-between;
+      font-size: px2rem(16);
+      padding: px2rem(8);
+      box-sizing: border-box;
+      .cancel {
+        color: #999;
+      }
+    }
+    .comment-container{
+      @include row();
+      flex-wrap: wrap;
+      .tag {
+        margin-right: px2rem(7.5);
+        margin-bottom: px2rem(5);
+        border-radius: px2rem(2);
+      }
+    }
+    .post {
+      border: none;
+      outline: none;
+      width: px2rem(345);
+      margin: px2rem(7.5) auto;
+      height: px2rem(28);
+      line-height: px2rem(28);
+      text-align: center;
+      background-color: #f5f5f5;
+      border-radius: px2rem(15);
+      margin-left: px2rem(7.5)
     }
   }
 }
