@@ -35,6 +35,12 @@ class BookModel extends HTTP {
       method: 'POST'
     })
   }
+
+  getBookSearch ({ start, q, summary }) {
+    return this.request({
+      url: `/book/search?summary=${summary}&start=${start}&q=${q}&count=20`
+    })
+  }
 }
 
 export default BookModel

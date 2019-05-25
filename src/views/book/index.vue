@@ -1,30 +1,36 @@
 <template>
   <div class="book-container">
-    <v-header></v-header>
-    <div class="header">
-      <div class="search-container">
-        <img src="../../assets/images/icon/search.png" alt="">
-        <div>书籍搜索</div>
+    <div v-show="!isSearch">
+      <v-header></v-header>
+      <div class="header">
+        <div @click="showSearch" class="search-container">
+          <img src="../../assets/images/icon/search.png" alt="">
+          <div>书籍搜索</div>
+        </div>
+      </div>
+      <div class="sub-container">
+        <img class="sub-title" src="../../assets/images/book/quality.png" alt="">
+        <div class="book-container">
+          <v-book class="book-item" v-for="v in books" :key="v.id" :data='v'></v-book>
+        </div>
       </div>
     </div>
-    <div class="sub-container">
-      <img class="sub-title" src="../../assets/images/book/quality.png" alt="">
-      <div class="book-container">
-        <v-book class="book-item" v-for="v in books" :key="v.id" :data='v'></v-book>
-      </div>
-    </div>
+
+    <v-search v-show="isSearch" @cancel='hideSearch'></v-search>
   </div>
 </template>
 
 <script>
 import VHeader from '@/components/header'
 import VBook from '@/components/book'
+import VSearch from '@/components/search'
 import BookModel from '../../models/book'
 const bookModel = new BookModel()
 export default {
   data () {
     return {
-      books: []
+      books: [],
+      isSearch: false
     }
   },
   created () {
@@ -36,11 +42,18 @@ export default {
         .then(res => {
           this.books = res
         })
+    },
+    hideSearch () {
+      this.isSearch = false
+    },
+    showSearch () {
+      this.isSearch = true
     }
   },
   components: {
     VBook,
-    VHeader
+    VHeader,
+    VSearch
   }
 }
 </script>
